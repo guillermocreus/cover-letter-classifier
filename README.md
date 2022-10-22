@@ -1,5 +1,4 @@
 # NLP API
-
 ## Instructions
 
 Steps to run the script
