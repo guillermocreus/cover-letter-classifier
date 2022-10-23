@@ -1,9 +1,8 @@
-# NLP API
-## Instructions
-
+# Cover Letter Analyzer Library (NLP)
+## 1. Using the Library
 Steps to run the script
 
-### Running the script for the first time
+### 1.1 Running the script for the first time
 This section shows how to create a virtual environment, which is needed to run the scripts from this project
 
 1. Open the root folder from the terminal
@@ -32,8 +31,7 @@ If successful, one can close virtual env
 deactivate
 ```
 
-### Execute scripts
-
+### 1.2 Execute scripts
 1. Open the virtual env
 ```bash
 source venv/bin/activate
@@ -61,3 +59,16 @@ source venv/bin/activate
 ```bash
 deactivate
 ```
+
+## 2. Package the Library
+The library is packaged into a distributable using the `setuptools` toolkit.
+To create the library package, the module `build` will need to be installed
+in the system (or in a virtualenv). Once installed, we can just run the 
+`build` module script.
+
+```bash
+$ pip install build
+$ python3 -m build
+```
+
+This will create the distributable files into the `dist/` directory.
