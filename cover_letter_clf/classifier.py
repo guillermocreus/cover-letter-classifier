@@ -2,7 +2,8 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from transformers_interpret import ZeroShotClassificationExplainer
 import torch
 import numpy as np
-from utils import clean_text
+
+from .utils import clean_text
 
 
 class Classifier:
