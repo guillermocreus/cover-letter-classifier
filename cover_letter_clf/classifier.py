@@ -1,8 +1,6 @@
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from transformers_interpret import ZeroShotClassificationExplainer
 import torch
-import numpy as np
-
 from .utils import clean_text
 
 
@@ -12,11 +10,13 @@ class Classifier:
         # models_to_choose = {"facebook/bart-large-mnli",
         #                     "typeform/distilbert-base-uncased-mnli"}
 
-        self.nli_model = AutoModelForSequenceClassification.from_pretrained(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self._nli_model = AutoModelForSequenceClassification.from_pretrained(
+            model_name)
+        self._tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self._device = torch.device(
+            "cuda:0" if torch.cuda.is_available() else "cpu")
 
-        self.nli_model = self.nli_model.to(self.device)
+        self._nli_model = self._nli_model.to(self._device)
 
     def classification_scores(
         self, cover_letter: str, labels: list[str]
@@ -35,21 +35,22 @@ class Classifier:
                 f"In this paragraph the applicant shows {label}." for label in labels
             ]
 
-            x = self.tokenizer(
+            x = self._tokenizer(
                 premise, hypothesis, return_tensors="pt", truncation=True, padding=True
             )
 
-            x = {key: value.to(self.device) for key, value in x.items()}
+            x = {key: value.to(self._device) for key, value in x.items()}
 
             with torch.no_grad():
-                logits = self.nli_model(**x)["logits"]
+                logits = self._nli_model(**x)["logits"]
 
             entail_contradiction_logits = logits[:, [0, 2]].cpu()
             probs = entail_contradiction_logits.softmax(dim=1).numpy()
             prob_label_is_true = probs[:, 1]
 
             for k, label in enumerate(labels):
-                results_dict[label] = max(results_dict[label], prob_label_is_true[k])
+                results_dict[label] = max(
+                    results_dict[label], prob_label_is_true[k])
 
         results = [(label, score) for label, score in results_dict.items()]
 
@@ -65,7 +66,7 @@ class Classifier:
 
         clean_paragraphs = clean_text(cover_letter)
         zero_shot_explainer = ZeroShotClassificationExplainer(
-            self.nli_model, self.tokenizer
+            self._nli_model, self._tokenizer
         )
 
         results = []
