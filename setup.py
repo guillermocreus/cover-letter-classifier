@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='cover_letter_clf',
-    version='1.0.0',
+    version='1.0.1',
     install_requires=[
         'transformers == 4.23.1',
         'transformers-interpret == 0.9.6',
